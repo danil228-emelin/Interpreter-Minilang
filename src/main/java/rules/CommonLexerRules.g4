@@ -1,4 +1,4 @@
-lexer grammar CommonLexerRules; // note "lexer grammar"
+lexer grammar CommonLexerRules;
 
 ID  :   [a-zA-Z]+ ;      // match identifiers
 INT :   [0-9]+ ;         // match integers
