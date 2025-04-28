@@ -6,8 +6,6 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
-import rules.LabeledExprVisitor;
-
 import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
@@ -20,8 +18,8 @@ public class LabeledExprParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, MUL=4, DIV=5, ADD=6, SUB=7, ID=8, INT=9, NEWLINE=10, 
-		WS=11;
+		T__0=1, T__1=2, T__2=3, MUL=4, DIV=5, ADD=6, SUB=7, NOT=8, AND=9, OR=10, 
+		GT=11, LT=12, GE=13, LE=14, EQ=15, NE=16, ID=17, INT=18, NEWLINE=19, WS=20;
 	public static final int
 		RULE_prog = 0, RULE_stat = 1, RULE_expr = 2;
 	private static String[] makeRuleNames() {
@@ -33,14 +31,15 @@ public class LabeledExprParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'='", "'('", "')'", "'*'", "'/'", "'+'", "'-'"
+			null, "'='", "'('", "')'", "'*'", "'/'", "'+'", "'-'", "'!'", "'&&'", 
+			"'||'", "'>'", "'<'", "'>='", "'<='", "'=='", "'!='"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, null, null, null, "MUL", "DIV", "ADD", "SUB", "ID", "INT", "NEWLINE", 
-			"WS"
+			null, null, null, null, "MUL", "DIV", "ADD", "SUB", "NOT", "AND", "OR", 
+			"GT", "LT", "GE", "LE", "EQ", "NE", "ID", "INT", "NEWLINE", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -133,7 +132,7 @@ public class LabeledExprParser extends Parser {
 				setState(9); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 1796L) != 0) );
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 917508L) != 0) );
 			}
 		}
 		catch (RecognitionException re) {
@@ -274,7 +273,7 @@ public class LabeledExprParser extends Parser {
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
-	public static class MulDivContext extends ExprContext {
+	public static class ComparisonContext extends ExprContext {
 		public Token op;
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
@@ -282,30 +281,16 @@ public class LabeledExprParser extends Parser {
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
-		public TerminalNode MUL() { return getToken(LabeledExprParser.MUL, 0); }
-		public TerminalNode DIV() { return getToken(LabeledExprParser.DIV, 0); }
-		public MulDivContext(ExprContext ctx) { copyFrom(ctx); }
+		public TerminalNode GT() { return getToken(LabeledExprParser.GT, 0); }
+		public TerminalNode LT() { return getToken(LabeledExprParser.LT, 0); }
+		public TerminalNode GE() { return getToken(LabeledExprParser.GE, 0); }
+		public TerminalNode LE() { return getToken(LabeledExprParser.LE, 0); }
+		public TerminalNode EQ() { return getToken(LabeledExprParser.EQ, 0); }
+		public TerminalNode NE() { return getToken(LabeledExprParser.NE, 0); }
+		public ComparisonContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof LabeledExprVisitor ) return ((LabeledExprVisitor<? extends T>)visitor).visitMulDiv(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class AddSubContext extends ExprContext {
-		public Token op;
-		public List<ExprContext> expr() {
-			return getRuleContexts(ExprContext.class);
-		}
-		public ExprContext expr(int i) {
-			return getRuleContext(ExprContext.class,i);
-		}
-		public TerminalNode ADD() { return getToken(LabeledExprParser.ADD, 0); }
-		public TerminalNode SUB() { return getToken(LabeledExprParser.SUB, 0); }
-		public AddSubContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof LabeledExprVisitor ) return ((LabeledExprVisitor<? extends T>)visitor).visitAddSub(this);
+			if ( visitor instanceof LabeledExprVisitor ) return ((LabeledExprVisitor<? extends T>)visitor).visitComparison(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -326,6 +311,26 @@ public class LabeledExprParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof LabeledExprVisitor ) return ((LabeledExprVisitor<? extends T>)visitor).visitInt(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class ArithmContext extends ExprContext {
+		public Token op;
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
+		}
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
+		}
+		public TerminalNode MUL() { return getToken(LabeledExprParser.MUL, 0); }
+		public TerminalNode DIV() { return getToken(LabeledExprParser.DIV, 0); }
+		public TerminalNode ADD() { return getToken(LabeledExprParser.ADD, 0); }
+		public TerminalNode SUB() { return getToken(LabeledExprParser.SUB, 0); }
+		public ArithmContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof LabeledExprVisitor ) return ((LabeledExprVisitor<? extends T>)visitor).visitArithm(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -398,15 +403,15 @@ public class LabeledExprParser extends Parser {
 					switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
 					case 1:
 						{
-						_localctx = new MulDivContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new ArithmContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(31);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
 						setState(32);
-						((MulDivContext)_localctx).op = _input.LT(1);
+						((ArithmContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
-						if ( !(_la==MUL || _la==DIV) ) {
-							((MulDivContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 240L) != 0)) ) {
+							((ArithmContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
 							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -419,15 +424,15 @@ public class LabeledExprParser extends Parser {
 						break;
 					case 2:
 						{
-						_localctx = new AddSubContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new ComparisonContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(34);
-						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
+						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
 						setState(35);
-						((AddSubContext)_localctx).op = _input.LT(1);
+						((ComparisonContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
-						if ( !(_la==ADD || _la==SUB) ) {
-							((AddSubContext)_localctx).op = (Token)_errHandler.recoverInline(this);
+						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 129024L) != 0)) ) {
+							((ComparisonContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 						}
 						else {
 							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
@@ -435,7 +440,7 @@ public class LabeledExprParser extends Parser {
 							consume();
 						}
 						setState(36);
-						expr(5);
+						expr(2);
 						}
 						break;
 					}
@@ -470,13 +475,13 @@ public class LabeledExprParser extends Parser {
 		case 0:
 			return precpred(_ctx, 5);
 		case 1:
-			return precpred(_ctx, 4);
+			return precpred(_ctx, 1);
 		}
 		return true;
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u000b+\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\u0014+\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0001\u0000\u0004\u0000\b\b\u0000\u000b\u0000\f\u0000"+
 		"\t\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
 		"\u0001\u0001\u0001\u0001\u0001\u0001\u0003\u0001\u0015\b\u0001\u0001\u0002"+
@@ -484,28 +489,28 @@ public class LabeledExprParser extends Parser {
 		"\u0003\u0002\u001e\b\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
 		"\u0001\u0002\u0001\u0002\u0005\u0002&\b\u0002\n\u0002\f\u0002)\t\u0002"+
 		"\u0001\u0002\u0000\u0001\u0004\u0003\u0000\u0002\u0004\u0000\u0002\u0001"+
-		"\u0000\u0004\u0005\u0001\u0000\u0006\u0007.\u0000\u0007\u0001\u0000\u0000"+
+		"\u0000\u0004\u0007\u0001\u0000\u000b\u0010.\u0000\u0007\u0001\u0000\u0000"+
 		"\u0000\u0002\u0014\u0001\u0000\u0000\u0000\u0004\u001d\u0001\u0000\u0000"+
 		"\u0000\u0006\b\u0003\u0002\u0001\u0000\u0007\u0006\u0001\u0000\u0000\u0000"+
 		"\b\t\u0001\u0000\u0000\u0000\t\u0007\u0001\u0000\u0000\u0000\t\n\u0001"+
 		"\u0000\u0000\u0000\n\u0001\u0001\u0000\u0000\u0000\u000b\f\u0003\u0004"+
-		"\u0002\u0000\f\r\u0005\n\u0000\u0000\r\u0015\u0001\u0000\u0000\u0000\u000e"+
-		"\u000f\u0005\b\u0000\u0000\u000f\u0010\u0005\u0001\u0000\u0000\u0010\u0011"+
-		"\u0003\u0004\u0002\u0000\u0011\u0012\u0005\n\u0000\u0000\u0012\u0015\u0001"+
-		"\u0000\u0000\u0000\u0013\u0015\u0005\n\u0000\u0000\u0014\u000b\u0001\u0000"+
-		"\u0000\u0000\u0014\u000e\u0001\u0000\u0000\u0000\u0014\u0013\u0001\u0000"+
-		"\u0000\u0000\u0015\u0003\u0001\u0000\u0000\u0000\u0016\u0017\u0006\u0002"+
-		"\uffff\uffff\u0000\u0017\u001e\u0005\t\u0000\u0000\u0018\u001e\u0005\b"+
-		"\u0000\u0000\u0019\u001a\u0005\u0002\u0000\u0000\u001a\u001b\u0003\u0004"+
-		"\u0002\u0000\u001b\u001c\u0005\u0003\u0000\u0000\u001c\u001e\u0001\u0000"+
-		"\u0000\u0000\u001d\u0016\u0001\u0000\u0000\u0000\u001d\u0018\u0001\u0000"+
-		"\u0000\u0000\u001d\u0019\u0001\u0000\u0000\u0000\u001e\'\u0001\u0000\u0000"+
-		"\u0000\u001f \n\u0005\u0000\u0000 !\u0007\u0000\u0000\u0000!&\u0003\u0004"+
-		"\u0002\u0006\"#\n\u0004\u0000\u0000#$\u0007\u0001\u0000\u0000$&\u0003"+
-		"\u0004\u0002\u0005%\u001f\u0001\u0000\u0000\u0000%\"\u0001\u0000\u0000"+
-		"\u0000&)\u0001\u0000\u0000\u0000\'%\u0001\u0000\u0000\u0000\'(\u0001\u0000"+
-		"\u0000\u0000(\u0005\u0001\u0000\u0000\u0000)\'\u0001\u0000\u0000\u0000"+
-		"\u0005\t\u0014\u001d%\'";
+		"\u0002\u0000\f\r\u0005\u0013\u0000\u0000\r\u0015\u0001\u0000\u0000\u0000"+
+		"\u000e\u000f\u0005\u0011\u0000\u0000\u000f\u0010\u0005\u0001\u0000\u0000"+
+		"\u0010\u0011\u0003\u0004\u0002\u0000\u0011\u0012\u0005\u0013\u0000\u0000"+
+		"\u0012\u0015\u0001\u0000\u0000\u0000\u0013\u0015\u0005\u0013\u0000\u0000"+
+		"\u0014\u000b\u0001\u0000\u0000\u0000\u0014\u000e\u0001\u0000\u0000\u0000"+
+		"\u0014\u0013\u0001\u0000\u0000\u0000\u0015\u0003\u0001\u0000\u0000\u0000"+
+		"\u0016\u0017\u0006\u0002\uffff\uffff\u0000\u0017\u001e\u0005\u0012\u0000"+
+		"\u0000\u0018\u001e\u0005\u0011\u0000\u0000\u0019\u001a\u0005\u0002\u0000"+
+		"\u0000\u001a\u001b\u0003\u0004\u0002\u0000\u001b\u001c\u0005\u0003\u0000"+
+		"\u0000\u001c\u001e\u0001\u0000\u0000\u0000\u001d\u0016\u0001\u0000\u0000"+
+		"\u0000\u001d\u0018\u0001\u0000\u0000\u0000\u001d\u0019\u0001\u0000\u0000"+
+		"\u0000\u001e\'\u0001\u0000\u0000\u0000\u001f \n\u0005\u0000\u0000 !\u0007"+
+		"\u0000\u0000\u0000!&\u0003\u0004\u0002\u0006\"#\n\u0001\u0000\u0000#$"+
+		"\u0007\u0001\u0000\u0000$&\u0003\u0004\u0002\u0002%\u001f\u0001\u0000"+
+		"\u0000\u0000%\"\u0001\u0000\u0000\u0000&)\u0001\u0000\u0000\u0000\'%\u0001"+
+		"\u0000\u0000\u0000\'(\u0001\u0000\u0000\u0000(\u0005\u0001\u0000\u0000"+
+		"\u0000)\'\u0001\u0000\u0000\u0000\u0005\t\u0014\u001d%\'";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

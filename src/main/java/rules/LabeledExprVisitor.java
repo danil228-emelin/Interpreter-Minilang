@@ -1,4 +1,6 @@
-package rules;// Generated from LabeledExpr.g4 by ANTLR 4.13.2
+// Generated from LabeledExpr.g4 by ANTLR 4.13.2
+package rules;
+
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -44,19 +46,12 @@ public interface LabeledExprVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParens(LabeledExprParser.ParensContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code MulDiv}
+	 * Visit a parse tree produced by the {@code comparison}
 	 * labeled alternative in {@link LabeledExprParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMulDiv(LabeledExprParser.MulDivContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code AddSub}
-	 * labeled alternative in {@link LabeledExprParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAddSub(LabeledExprParser.AddSubContext ctx);
+	T visitComparison(LabeledExprParser.ComparisonContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code id}
 	 * labeled alternative in {@link LabeledExprParser#expr}.
@@ -71,4 +66,11 @@ public interface LabeledExprVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitInt(LabeledExprParser.IntContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code arithm}
+	 * labeled alternative in {@link LabeledExprParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArithm(LabeledExprParser.ArithmContext ctx);
 }

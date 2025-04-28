@@ -2,10 +2,32 @@ package rules;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
+import static java.util.Map.entry;
 
 public class EvalVisitor extends LabeledExprBaseVisitor<Integer> {
-    /** "memory" for our calculator; variable/value pairs go here */
     Map<String, Integer> memory = new HashMap<String, Integer>();
+    Map<Integer, BiFunction<Integer, Integer, Integer>> BINARY_OPS = Map.ofEntries(
+            entry(LabeledExprParser.MUL, (a, b) -> a * b),
+            entry(LabeledExprParser.DIV, (a, b) -> a / b),
+            entry(LabeledExprParser.ADD, Integer::sum),
+            entry(LabeledExprParser.SUB, (a, b) -> a - b),
+            entry(LabeledExprParser.GT, (a, b) -> (a > b) ? 1:0),
+            entry(LabeledExprParser.LT, (a, b) -> (a < b)? 1:0),
+            entry(LabeledExprParser.GE, (a, b) -> (a >= b)? 1:0),
+            entry(LabeledExprParser.LE, (a, b) -> (a <= b)? 1:0),
+            entry(LabeledExprParser.EQ, (a, b) -> (Objects.equals(a, b))? 1:0),
+            entry(LabeledExprParser.NE, (a, b) -> (!Objects.equals(a, b))? 1:0)
+    );
+
+    private static final Map<Integer, BiFunction<Integer, Integer, Boolean>> COMPARISONS = Map.ofEntries(
+
+    );
+
+
 
     /** ID '=' expr NEWLINE */
     @Override
@@ -38,27 +60,26 @@ public class EvalVisitor extends LabeledExprBaseVisitor<Integer> {
         return 0;
     }
 
-    /** expr op=('*'|'/') expr */
+    /** expr op=('*'|'/'|'+'|'-')expr */
     @Override
-    public Integer visitMulDiv(LabeledExprParser.MulDivContext ctx) {
+    public Integer visitArithm(LabeledExprParser.ArithmContext ctx) {
         int left = visit(ctx.expr(0));  // get value of left subexpression
         int right = visit(ctx.expr(1)); // get value of right subexpression
-        if ( ctx.op.getType() == LabeledExprParser.MUL ) return left * right;
-        return left / right; // must be DIV
-    }
-
-    /** expr op=('+'|'-') expr */
-    @Override
-    public Integer visitAddSub(LabeledExprParser.AddSubContext ctx) {
-        int left = visit(ctx.expr(0));  // get value of left subexpression
-        int right = visit(ctx.expr(1)); // get value of right subexpression
-        if ( ctx.op.getType() == LabeledExprParser.ADD ) return left + right;
-        return left - right; // must be SUB
+        return BINARY_OPS.get(ctx.op.getType()).apply(left, right);
     }
 
     /** '(' expr ')' */
     @Override
     public Integer visitParens(LabeledExprParser.ParensContext ctx) {
         return visit(ctx.expr()); // return child expr's value
+    }
+
+    /** expr op=('>'|'<'|'>='|'<='|'=='|'!=') expr */
+    @Override
+    public Integer visitComparison(LabeledExprParser.ComparisonContext ctx) {
+        int left = visit(ctx.expr(0));  // get value of left subexpression
+        int right = visit(ctx.expr(1)); // get value of right subexpression
+
+        return BINARY_OPS.get(ctx.op.getType()).apply(left, right);
     }
 }
