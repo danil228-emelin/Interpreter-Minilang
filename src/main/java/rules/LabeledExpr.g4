@@ -8,11 +8,13 @@ stat:   expr NEWLINE                # printExpr
     |   NEWLINE                     # blank
     ;
 
-expr:   expr op=('*'|'/'|'+'|'-') expr      # arithm
-    |   INT                         # int
-    |   ID                          # id
-    |   '(' expr ')'                # parens
-    | expr op=('>'|'<'|'>='|'<='|'=='|'!=') expr  # comparison
+expr:  expr op=('*'|'/') expr  # mulDiv
+    |  expr op=('+'|'-') expr  # addSub
+    |  expr op=('<'|'>'|'<='|'>=') expr # Relational
+    |  expr op=('=='|'!=') expr # Comparison
+    |   '(' expr ')'         # parens
+    |   INT                  # int
+    |   ID                   # id
     ;
 
 

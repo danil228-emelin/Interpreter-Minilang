@@ -46,12 +46,26 @@ public interface LabeledExprVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParens(LabeledExprParser.ParensContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code comparison}
+	 * Visit a parse tree produced by the {@code Comparison}
 	 * labeled alternative in {@link LabeledExprParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitComparison(LabeledExprParser.ComparisonContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Relational}
+	 * labeled alternative in {@link LabeledExprParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRelational(LabeledExprParser.RelationalContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code addSub}
+	 * labeled alternative in {@link LabeledExprParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAddSub(LabeledExprParser.AddSubContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code id}
 	 * labeled alternative in {@link LabeledExprParser#expr}.
@@ -67,10 +81,10 @@ public interface LabeledExprVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitInt(LabeledExprParser.IntContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code arithm}
+	 * Visit a parse tree produced by the {@code mulDiv}
 	 * labeled alternative in {@link LabeledExprParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitArithm(LabeledExprParser.ArithmContext ctx);
+	T visitMulDiv(LabeledExprParser.MulDivContext ctx);
 }

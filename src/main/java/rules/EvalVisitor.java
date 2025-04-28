@@ -57,16 +57,10 @@ public class EvalVisitor extends LabeledExprBaseVisitor<Integer> {
     public Integer visitId(LabeledExprParser.IdContext ctx) {
         String id = ctx.ID().getText();
         if ( memory.containsKey(id) ) return memory.get(id);
+        System.out.printf("Variable %s doesn't exist,return 0\n",id);
         return 0;
     }
 
-    /** expr op=('*'|'/'|'+'|'-')expr */
-    @Override
-    public Integer visitArithm(LabeledExprParser.ArithmContext ctx) {
-        int left = visit(ctx.expr(0));  // get value of left subexpression
-        int right = visit(ctx.expr(1)); // get value of right subexpression
-        return BINARY_OPS.get(ctx.op.getType()).apply(left, right);
-    }
 
     /** '(' expr ')' */
     @Override
@@ -74,9 +68,32 @@ public class EvalVisitor extends LabeledExprBaseVisitor<Integer> {
         return visit(ctx.expr()); // return child expr's value
     }
 
-    /** expr op=('>'|'<'|'>='|'<='|'=='|'!=') expr */
+    @Override
+    public Integer visitMulDiv(LabeledExprParser.MulDivContext ctx) {
+        int left = visit(ctx.expr(0));  // get value of left subexpression
+        int right = visit(ctx.expr(1)); // get value of right subexpression
+
+        return BINARY_OPS.get(ctx.op.getType()).apply(left, right);
+    }
+
+    @Override
+    public Integer visitAddSub(LabeledExprParser.AddSubContext ctx) {
+        int left = visit(ctx.expr(0));  // get value of left subexpression
+        int right = visit(ctx.expr(1)); // get value of right subexpression
+
+        return BINARY_OPS.get(ctx.op.getType()).apply(left, right);
+    }
+
     @Override
     public Integer visitComparison(LabeledExprParser.ComparisonContext ctx) {
+        int left = visit(ctx.expr(0));  // get value of left subexpression
+        int right = visit(ctx.expr(1)); // get value of right subexpression
+
+        return BINARY_OPS.get(ctx.op.getType()).apply(left, right);
+    }
+
+    @Override
+    public Integer visitRelational(LabeledExprParser.RelationalContext ctx) {
         int left = visit(ctx.expr(0));  // get value of left subexpression
         int right = visit(ctx.expr(1)); // get value of right subexpression
 
