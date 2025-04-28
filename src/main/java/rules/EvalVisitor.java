@@ -21,6 +21,7 @@ public class EvalVisitor extends LabeledExprBaseVisitor<Integer> {
             entry(LabeledExprParser.LE, (a, b) -> (a <= b)? 1:0),
             entry(LabeledExprParser.EQ, (a, b) -> (Objects.equals(a, b))? 1:0),
             entry(LabeledExprParser.NE, (a, b) -> (!Objects.equals(a, b))? 1:0)
+
     );
 
     private static final Map<Integer, BiFunction<Integer, Integer, Boolean>> COMPARISONS = Map.ofEntries(
@@ -85,7 +86,7 @@ public class EvalVisitor extends LabeledExprBaseVisitor<Integer> {
     }
 
     @Override
-    public Integer visitComparison(LabeledExprParser.ComparisonContext ctx) {
+    public Integer visitEquality(LabeledExprParser.EqualityContext ctx) {
         int left = visit(ctx.expr(0));  // get value of left subexpression
         int right = visit(ctx.expr(1)); // get value of right subexpression
 
@@ -98,5 +99,15 @@ public class EvalVisitor extends LabeledExprBaseVisitor<Integer> {
         int right = visit(ctx.expr(1)); // get value of right subexpression
 
         return BINARY_OPS.get(ctx.op.getType()).apply(left, right);
+    }
+
+    @Override
+    public Integer visitIfStatement(LabeledExprParser.IfStatementContext ctx) {
+        int condition = visit(ctx.ifStat().expr());
+        System.out.println("Condition "+condition);
+        if (condition>0){
+
+        }
+    return 0;
     }
 }

@@ -5,6 +5,14 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
+/**
+ * 1) может добавить операции && ||
+ * 2) попробовать выводить ошибки
+ * 3) реализовать тесты
+ * 4) добавить строки и их работу с операндами и операндами разных типов
+ * 5)написать текстовый файл с программой
+ */
+
 public class Calc {
     public static void main(String[] args) throws Exception {
         String inputFile = null;

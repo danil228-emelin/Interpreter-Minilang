@@ -5,29 +5,33 @@ prog:   stat+ ;
 
 stat:   expr NEWLINE                # printExpr
     |   ID '=' expr NEWLINE         # assign
+    |   ifStat                      # ifStatement
     |   NEWLINE                     # blank
     ;
 
-expr:  expr op=('*'|'/') expr  # mulDiv
-    |  expr op=('+'|'-') expr  # addSub
-    |  expr op=('<'|'>'|'<='|'>=') expr # Relational
-    |  expr op=('=='|'!=') expr # Comparison
-    |   '(' expr ')'         # parens
-    |   INT                  # int
-    |   ID                   # id
+ifStat: 'if' expr 'then' block ('else' block)? ;
+
+block: '{' stat* '}' | stat;
+
+expr: expr op=('*'|'/') expr         # mulDiv
+    |   expr op=('+'|'-') expr         # addSub
+    |   expr op=('<'|'>'|'<='|'>=') expr # relational
+    |   expr op=('=='|'!=') expr       # equality
+    |   '(' expr ')'                # parens
+    |   INT                         # int
+    |   ID                          # id
     ;
 
-
-MUL :   '*' ; // assigns token name to '*' used above in grammar
-DIV :   '/' ;
-ADD :   '+' ;
-SUB :   '-' ;
-NOT :   '!' ;
-AND :   '&&' ;
-OR  :   '||' ;
-GT  :   '>' ;
-LT  :   '<' ;
-GE  :   '>=' ;
-LE  :   '<=' ;
-EQ  :   '==' ;
-NE  :   '!=' ;
+MUL : '*' ;
+DIV : '/' ;
+ADD : '+' ;
+SUB : '-' ;
+NOT : '!' ;
+AND : '&&' ;
+OR  : '||' ;
+GT  : '>' ;
+LT  : '<' ;
+GE  : '>=' ;
+LE  : '<=' ;
+EQ  : '==' ;
+NE  : '!=' ;

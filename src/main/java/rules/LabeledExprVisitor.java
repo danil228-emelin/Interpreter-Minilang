@@ -32,12 +32,31 @@ public interface LabeledExprVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssign(LabeledExprParser.AssignContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code ifStatement}
+	 * labeled alternative in {@link LabeledExprParser#stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfStatement(LabeledExprParser.IfStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code blank}
 	 * labeled alternative in {@link LabeledExprParser#stat}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitBlank(LabeledExprParser.BlankContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link LabeledExprParser#ifStat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfStat(LabeledExprParser.IfStatContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link LabeledExprParser#block}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBlock(LabeledExprParser.BlockContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code parens}
 	 * labeled alternative in {@link LabeledExprParser#expr}.
@@ -46,20 +65,6 @@ public interface LabeledExprVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParens(LabeledExprParser.ParensContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code Comparison}
-	 * labeled alternative in {@link LabeledExprParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitComparison(LabeledExprParser.ComparisonContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code Relational}
-	 * labeled alternative in {@link LabeledExprParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRelational(LabeledExprParser.RelationalContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code addSub}
 	 * labeled alternative in {@link LabeledExprParser#expr}.
 	 * @param ctx the parse tree
@@ -67,12 +72,26 @@ public interface LabeledExprVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAddSub(LabeledExprParser.AddSubContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code relational}
+	 * labeled alternative in {@link LabeledExprParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRelational(LabeledExprParser.RelationalContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code id}
 	 * labeled alternative in {@link LabeledExprParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitId(LabeledExprParser.IdContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code equality}
+	 * labeled alternative in {@link LabeledExprParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEquality(LabeledExprParser.EqualityContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code int}
 	 * labeled alternative in {@link LabeledExprParser#expr}.
