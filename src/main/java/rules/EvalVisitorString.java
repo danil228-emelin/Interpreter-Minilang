@@ -43,8 +43,13 @@ public class EvalVisitorString extends LabeledExprBaseVisitor<String> {
     @Override
     public String visitPrintExpr(LabeledExprParser.PrintExprContext ctx) {
         String value = visit(ctx.expr());
-        if (value.isEmpty() || convertStringToInt(value)==Integer.MAX_VALUE) {return "";}
+        if (value == null || value.isEmpty() || convertStringToInt(value)==Integer.MAX_VALUE) {return "";}
         System.out.println("EVS: "+ value);
+        return "";
+    }
+
+    @Override
+    public String visitIfStat(LabeledExprParser.IfStatContext ctx) {
         return "";
     }
 
@@ -70,7 +75,7 @@ public class EvalVisitorString extends LabeledExprBaseVisitor<String> {
         String possible_var_right = ctx.getChild(2).getText();
 
         if (memoryString.containsKey(possible_var_left) || memoryString.containsKey(possible_var_right) ) {
-            System.out.println("Strings don't support multiplication");
+            System.out.println("Strings don't support multiplication and division");
         }
         return "";
     }

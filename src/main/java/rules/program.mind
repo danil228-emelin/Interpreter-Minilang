@@ -1,2 +1,5 @@
 :> Program on Minilang language
-"ab" + "bc"
+x = 5
+if ( 3>1 ) then {
+2
+}
