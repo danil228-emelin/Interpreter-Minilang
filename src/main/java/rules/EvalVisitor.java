@@ -9,7 +9,7 @@ import static java.util.Map.entry;
 
 public class EvalVisitor extends LabeledExprBaseVisitor<Integer> {
     Map<String, Integer> memory = new HashMap<String, Integer>();
-    Map<String, String> memoryString = new HashMap<String, String>();
+
     Map<Integer, BiFunction<Integer, Integer, Integer>> BINARY_OPS = Map.ofEntries(
             entry(LabeledExprParser.MUL, (a, b) -> a * b),
             entry(LabeledExprParser.DIV, (a, b) -> a / b),
@@ -24,33 +24,31 @@ public class EvalVisitor extends LabeledExprBaseVisitor<Integer> {
 
     );
 
-    public Integer convertStringToInt(String s) {
-        if (s == null || s.trim().isEmpty()) {
-            return 0;
-        }
 
-        try {
-            return Integer.parseInt(s.trim());
-        } catch (NumberFormatException e) {
-            System.out.printf("%s cannot be converted to an integer\n", s);
-            return 0;
-        }
-
+    @Override
+    public Integer visitPrintString(LabeledExprParser.PrintStringContext ctx) {
+        return 0;
     }
 
     @Override
     public Integer visitAssign(LabeledExprParser.AssignContext ctx) {
-        String id = ctx.ID().getText();  
-        int value = visit(ctx.expr());   
-        memory.put(id, value);           
+        String id = ctx.ID().getText();
+        if (EvalVisitorString.IsKeyExistInMemoryString(id)) {
+            System.out.printf("Variable %s already defined as String\n", id);
+            return Integer.MAX_VALUE;
+        }
+        int value = visit(ctx.expr());
+        memory.put(id, value);
         return value;
     }
 
     @Override
     public Integer visitPrintExpr(LabeledExprParser.PrintExprContext ctx) {
-        Integer value = visit(ctx.expr()); 
-        System.out.println(value);         
-        return 0;                          
+        Integer value = visit(ctx.expr());
+        if (!value.equals( Integer.MAX_VALUE)) {
+            System.out.println("EVI: "+ value);
+        }
+        return value;
     }
 
 
@@ -62,41 +60,33 @@ public class EvalVisitor extends LabeledExprBaseVisitor<Integer> {
     @Override
     public Integer visitId(LabeledExprParser.IdContext ctx) {
         String id = ctx.ID().getText();
-        if (memory.containsKey(id)) return memory.get(id);
-        if (memoryString.containsKey(id)) return Integer.valueOf(memoryString.get(id));
+        if (memory.containsKey(id)) {
+            return memory.get(id);
+        } else if (EvalVisitorString.IsKeyExistInMemoryString(id)) {
+            return Integer.MAX_VALUE;
 
-        System.out.printf("Variable %s doesn't exist,return 0\n", id);
+        }
+        System.out.printf("EVI: variable %s doesn't exist return 0\n", id);
         return 0;
     }
 
     @Override
     public Integer visitParens(LabeledExprParser.ParensContext ctx) {
-        return visit(ctx.expr()); 
+        return visit(ctx.expr());
     }
 
 
     @Override
     public Integer visitMulDiv(LabeledExprParser.MulDivContext ctx) {
-        int left = 0;  
-        int right = 0; 
+
+        int left = visit(ctx.expr(0));
+        int right = visit(ctx.expr(1));
 
         String possible_var_left = ctx.getChild(0).getText();
         String possible_var_right = ctx.getChild(2).getText();
 
-        if (memoryString.containsKey(possible_var_left)) {
-            String value = memoryString.get(possible_var_left);
-            left = convertStringToInt(value.substring(1, value.length() - 1));
-
-        } else {
-            left = visit(ctx.expr(0));
-        }
-
-        if (memoryString.containsKey(possible_var_right)) {
-            String value = memoryString.get(possible_var_left);
-            right = convertStringToInt(value.substring(1, value.length() - 1));
-
-        } else {
-            right = visit(ctx.expr(1));
+        if (EvalVisitorString.IsKeyExistInMemoryString(possible_var_left) || EvalVisitorString.IsKeyExistInMemoryString(possible_var_right) ) {
+                return Integer.MAX_VALUE;
         }
 
         return BINARY_OPS.get(ctx.op.getType()).apply(left, right);
@@ -104,53 +94,30 @@ public class EvalVisitor extends LabeledExprBaseVisitor<Integer> {
 
     @Override
     public Integer visitAddSub(LabeledExprParser.AddSubContext ctx) {
-        int left = 0;  
-        int right = 0; 
+        int left = visit(ctx.expr(0));
+        int right = visit(ctx.expr(1));
 
         String possible_var_left = ctx.getChild(0).getText();
         String possible_var_right = ctx.getChild(2).getText();
 
-        if (memoryString.containsKey(possible_var_left)) {
-            String value = memoryString.get(possible_var_left);
-            left = convertStringToInt(value.substring(1, value.length() - 1));
-
-        } else {
-            left = visit(ctx.expr(0));
-        }
-
-        if (memoryString.containsKey(possible_var_right)) {
-            String value = memoryString.get(possible_var_left);
-            right = convertStringToInt(value.substring(1, value.length() - 1));
-
-        } else {
-            right = visit(ctx.expr(1));
+        if (EvalVisitorString.IsKeyExistInMemoryString(possible_var_left) || EvalVisitorString.IsKeyExistInMemoryString(possible_var_right) ) {
+            return Integer.MAX_VALUE;
         }
 
         return BINARY_OPS.get(ctx.op.getType()).apply(left, right);
+
     }
 
     @Override
     public Integer visitEquality(LabeledExprParser.EqualityContext ctx) {
-        int left = 0;  
-        int right = 0; 
+        int left = visit(ctx.expr(0));
+        int right = visit(ctx.expr(1));
 
         String possible_var_left = ctx.getChild(0).getText();
         String possible_var_right = ctx.getChild(2).getText();
 
-        if (memoryString.containsKey(possible_var_left)) {
-            String value = memoryString.get(possible_var_left);
-            left = convertStringToInt(value.substring(1, value.length() - 1));
-
-        } else {
-            left = visit(ctx.expr(0));
-        }
-
-        if (memoryString.containsKey(possible_var_right)) {
-            String value = memoryString.get(possible_var_left);
-            right = convertStringToInt(value.substring(1, value.length() - 1));
-
-        } else {
-            right = visit(ctx.expr(1));
+        if (EvalVisitorString.IsKeyExistInMemoryString(possible_var_left) || EvalVisitorString.IsKeyExistInMemoryString(possible_var_right) ) {
+            return Integer.MAX_VALUE;
         }
 
         return BINARY_OPS.get(ctx.op.getType()).apply(left, right);
@@ -158,26 +125,14 @@ public class EvalVisitor extends LabeledExprBaseVisitor<Integer> {
 
     @Override
     public Integer visitRelational(LabeledExprParser.RelationalContext ctx) {
-        int left = 0;  
-        int right = 0; 
+        int left = visit(ctx.expr(0));
+        int right = visit(ctx.expr(1));
 
         String possible_var_left = ctx.getChild(0).getText();
         String possible_var_right = ctx.getChild(2).getText();
 
-        if (memoryString.containsKey(possible_var_left)) {
-            String value = memoryString.get(possible_var_left);
-            left = convertStringToInt(value.substring(1, value.length() - 1));
-
-        } else {
-            left = visit(ctx.expr(0));
-        }
-
-        if (memoryString.containsKey(possible_var_right)) {
-            String value = memoryString.get(possible_var_left);
-            right = convertStringToInt(value.substring(1, value.length() - 1));
-
-        } else {
-            right = visit(ctx.expr(1));
+        if (EvalVisitorString.IsKeyExistInMemoryString(possible_var_left) || EvalVisitorString.IsKeyExistInMemoryString(possible_var_right) ) {
+            return Integer.MAX_VALUE;
         }
 
         return BINARY_OPS.get(ctx.op.getType()).apply(left, right);
@@ -224,18 +179,5 @@ public class EvalVisitor extends LabeledExprBaseVisitor<Integer> {
         return 0;
     }
 
-    @Override
-    public Integer visitPrintString(LabeledExprParser.PrintStringContext ctx) {
-        System.out.println(ctx.STRING().getText());
-        return 0;
-    }
-
-    @Override
-    public Integer visitAssignString(LabeledExprParser.AssignStringContext ctx) {
-        String id = ctx.ID().getText();  
-        String value = ctx.STRING().getText();   
-        memoryString.put(id, value);           
-        return 0;
-    }
 
 }

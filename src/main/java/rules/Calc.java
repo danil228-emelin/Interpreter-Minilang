@@ -6,10 +6,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-/**
- * 4) добавить строки и их работу с операндами и операндами разных типов
- * 5)написать текстовый файл с программой
- */
 
 public class Calc {
     public static void main(String[] args) throws Exception {
@@ -24,6 +20,8 @@ public class Calc {
         ParseTree tree = parser.prog();
 
         EvalVisitor eval = new EvalVisitor();
+        EvalVisitorString evalVisitorString = new EvalVisitorString();
+        evalVisitorString.visit(tree);
         eval.visit(tree);
     }
 }
