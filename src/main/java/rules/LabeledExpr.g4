@@ -11,7 +11,9 @@ stat:   expr NEWLINE                # printExpr
 
 ifStat: 'if' expr 'then' block ('else' block)? ;
 
-block: '{' stat* '}' | stat;
+block: '{' stat* '}'                # multiple_logic_block
+        | stat                      # single_logic_block
+        ;
 
 expr: expr op=('*'|'/') expr         # mulDiv
     |   expr op=('+'|'-') expr         # addSub
