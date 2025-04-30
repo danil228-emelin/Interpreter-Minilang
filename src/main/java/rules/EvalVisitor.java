@@ -109,6 +109,15 @@ public class EvalVisitor extends LabeledExprBaseVisitor<Integer> {
     }
 
     @Override
+    public Integer visitWhileStatement(LabeledExprParser.WhileStatementContext ctx) {
+
+        while (visit(ctx.whileStat().expr()) > 0) {
+            visit(ctx.whileStat().block());
+        }
+        return 0;
+    }
+
+    @Override
     public Integer visitIfStatement(LabeledExprParser.IfStatementContext ctx) {
         int condition = visit(ctx.ifStat().expr());
 

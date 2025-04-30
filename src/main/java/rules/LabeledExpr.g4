@@ -6,8 +6,11 @@ prog:   stat+ ;
 stat:   expr NEWLINE                # printExpr
     |   ID '=' expr NEWLINE         # assign
     |   ifStat                      # ifStatement
+    |   whileStat                   # whileStatement
     |   NEWLINE                     # blank
     ;
+
+whileStat:  'while' expr block ;
 
 ifStat: 'if' expr 'then' block ('else' block)? ;
 
