@@ -9,7 +9,10 @@ stat:   expr NEWLINE                # printExpr
     |   whileStat                   # whileStatement
     |   NEWLINE                     # blank
     | LINE_COMMENT                  # comment
+    | STRING NEWLINE                # printString
+    | ID '=' STRING NEWLINE         # assignString
     ;
+
 
 whileStat:  'while' expr block ;
 
