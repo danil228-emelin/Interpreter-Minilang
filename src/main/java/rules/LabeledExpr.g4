@@ -8,6 +8,7 @@ stat:   expr NEWLINE                # printExpr
     |   ifStat                      # ifStatement
     |   whileStat                   # whileStatement
     |   NEWLINE                     # blank
+    | LINE_COMMENT                  # comment
     ;
 
 whileStat:  'while' expr block ;

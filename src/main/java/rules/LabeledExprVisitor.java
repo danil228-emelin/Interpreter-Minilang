@@ -53,6 +53,13 @@ public interface LabeledExprVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBlank(LabeledExprParser.BlankContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code comment}
+	 * labeled alternative in {@link LabeledExprParser#stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitComment(LabeledExprParser.CommentContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link LabeledExprParser#whileStat}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
